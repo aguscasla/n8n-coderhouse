@@ -1,0 +1,160 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "q": "subject:\"Consulta\"",
+          "readStatus": "unread"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "4d433125-4dd8-4928-a313-51c97db02264",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "R7Frq8ftpXI6tPjs",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        48,
+        128
+      ],
+      "id": "aad7df7b-4647-41eb-9a15-fe466e0c0177",
+      "name": "Mark a message as read",
+      "webhookId": "84aad6ad-3435-4814-88b6-fc61f5bbc062",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "R7Frq8ftpXI6tPjs",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1aXAg4L4JqgADENokn8g7i9hzDgudLBcxjaPTDgU__3s",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Remitente": "={{$json.From}}",
+            "Fecha": "=  {{ DateTime.fromMillis(Number($json.internalDate)).setZone('America/Argentina/Buenos_Aires').toFormat('dd/MM/yyyy HH:mm:ss') }}\n",
+            "Cuerpo": "={{$json.snippet}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Remitente",
+              "displayName": "Remitente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cuerpo",
+              "displayName": "Cuerpo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        -32
+      ],
+      "id": "be6b895e-351c-43ca-b966-b7b2bb4e26d9",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eR0YPIUE66TXbZmm",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "cebb5afa-f17a-4aca-85dc-fa9ba1ed79a7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e6c829c21a63863374856cb1ee037221ea51ca90d2d9c21be73de9af12b52a6a"
+  },
+  "nodeGroups": [],
+  "id": "VUYLMFIxVmh5KVRC",
+  "tags": []
+}
